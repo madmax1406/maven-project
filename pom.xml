@@ -16,7 +16,6 @@
     </properties>
 
     <dependencies>
-        <!-- Corrected: Added version to fix the error -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit-dep</artifactId>
@@ -27,14 +26,14 @@
 
     <build>
         <plugins>
-            <!-- Fixing warning: Add version for Jetty plugin -->
+            <!-- Jetty plugin -->
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>8.1.16.v20140903</version>
             </plugin>
 
-            <!-- Maven compiler plugin -->
+            <!-- Compiler plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -43,23 +42,24 @@
                     <release>17</release>
                 </configuration>
             </plugin>
+
+            <!-- JAR plugin with Main-Class -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.example.Greeter</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-    <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-jar-plugin</artifactId>
-      <version>3.3.0</version>
-      <configuration>
-        <archive>
-          <manifest>
-            <addClasspath>true</addClasspath>
-            <mainClass>com.example.Main</mainClass>
-          </manifest>
-        </archive>
-      </configuration>
-    </plugin>
 
-    <!-- Optional: Proper reporting section -->
     <reporting>
         <plugins>
             <plugin>
