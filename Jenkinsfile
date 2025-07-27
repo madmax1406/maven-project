@@ -62,10 +62,11 @@ pipeline {
             dir ("${env.WORKSPACE}/artifacts/dev")
             {
                 unstash "maven-build"
+                sh """ 
+                    java -jar server-1.0-SNAPSHOT.jar
+                """
             }
-            sh """ 
-            java -jar server-1.0-SNAPSHOT.jar
-            """
+            
         }
     }
         stage('Deploy_Prod') {
@@ -82,10 +83,11 @@ pipeline {
             dir ("${env.WORKSPACE}/artifacts/prod")
             {
                 unstash "maven-build"
+                 sh """ 
+                    java -jar server-1.0-SNAPSHOT.jar
+                """
             }
-            sh """ 
-            java -jar server-1.0-SNAPSHOT.jar
-            """
+           
         }
     }
 }
