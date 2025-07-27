@@ -17,7 +17,7 @@ pipeline {
 
     stage('Build') {
           steps {
-            sh "echo My Name is ${param.NAME}"
+            sh "echo My Name is ${params.NAME}"
             sh "mvn clean package"
         }
 
