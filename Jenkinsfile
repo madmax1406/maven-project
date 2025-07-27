@@ -8,10 +8,16 @@ pipeline {
   maven 'mymaven'
     }
 
+    parameters {
+        string defaultValue: 'Pushkar', name: 'NAME'
+    }   
+
+
     stages {
 
     stage('Build') {
           steps {
+            sh "echo My Name is ${param.NAME}"
             sh "mvn clean package"
         }
 
