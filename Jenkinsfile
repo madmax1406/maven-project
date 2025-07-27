@@ -64,7 +64,6 @@ pipeline {
                 unstash "maven-build"
             }
             sh """ 
-            cd /var/www/html/
             java -jar server-1.0-SNAPSHOT.jar
             """
         }
@@ -85,7 +84,6 @@ pipeline {
                 unstash "maven-build"
             }
             sh """ 
-            cd /var/www/html/
             java -jar server-1.0-SNAPSHOT.jar
             """
         }
