@@ -59,7 +59,7 @@ pipeline {
             beforeAgent true
         }
           steps {
-            dir ("/home/jenkins/artifacts/dev")
+            dir ("${env.WORKSPACE}/artifacts/dev")
             {
                 unstash "maven-build"
             }
@@ -80,7 +80,7 @@ pipeline {
             {
                 input message: 'Deployment approved?'
             }
-            dir ("/home/jenkins/artifacts/prod")
+            dir ("${env.WORKSPACE}/artifacts/prod")
             {
                 unstash "maven-build"
             }
