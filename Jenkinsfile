@@ -9,7 +9,7 @@ pipeline {
     }
 
     parameters {
-        string defaultValue: 'Pushkar', name: 'NAME'
+        choice choices: ['Dev', 'Prod'], description: 'Select an Environment to proceed with deployment.', name: 'Environment'
     }   
 
 
@@ -17,14 +17,77 @@ pipeline {
 
     stage('Build') {
           steps {
-            sh "echo My Name is ${params.NAME}"
-            sh "mvn clean package"
+            sh 'mvn clean package -DskipTests=true'
         }
+    }
+        
+    stage('Test') {
 
+        parallel {
+
+            stage('Test-A')
+            {
+                agent {label 'devserver'}
+                    steps{
+                        echo 'This is Test A'
+                        sh "mvn test"
+                    }
+            }
+
+            stage('Test-B')
+            {
+                agent {label 'devserver'}
+                    steps{
+                        echo 'This is Test B'
+                        sh "mvn test"
+                    }
+            }
+        }
+          
         post {
                 success {
-                    archiveArtifacts artifacts: '**/target/*.jar'
+                    dir("**/target/")
+                    {
+                    stash includes: '*.jar', name: 'maven-build'
+                    }
             }
+        }
+    }
+    stage('Deploy_Dev') {
+        when {
+            expression {params.Environment == 'Dev'}
+            beforeAgent true
+        }
+          steps {
+            dir ("var/www/html")
+            {
+                unstash "maven-build"
+            }
+            sh """ 
+            cd /var/www/html/
+            java -jar server-1.0-SNAPSHOT.jar
+            """
+        }
+    }
+        stage('Deploy_Prod') {
+        when {
+            expression {params.Environment == 'Prod'}
+            beforeAgent true
+        }
+         agent { label 'prodserver' }
+          steps {
+            timeout(time:5, unit:'DAYS')
+            {
+                input message: 'Deployment approved?'
+            }
+            dir ("var/www/html")
+            {
+                unstash "maven-build"
+            }
+            sh """ 
+            cd /var/www/html/
+            java -jar server-1.0-SNAPSHOT.jar
+            """
         }
     }
 }
