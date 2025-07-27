@@ -59,7 +59,7 @@ pipeline {
             beforeAgent true
         }
           steps {
-            dir ("var/www/html")
+            dir ("/var/www/html")
             {
                 unstash "maven-build"
             }
@@ -80,7 +80,7 @@ pipeline {
             {
                 input message: 'Deployment approved?'
             }
-            dir ("var/www/html")
+            dir ("/var/www/html")
             {
                 unstash "maven-build"
             }
